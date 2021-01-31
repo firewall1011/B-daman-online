@@ -4,17 +4,21 @@ using System.IO;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using Mirror;
 
 [CreateAssetMenu(menuName = "Event Generator")]
 public class GenerateEventSO : ScriptableObject
 {
-    public string type = "";
+    public string @namespace = "";
+    public string @class = "";
     public string path = "";
+
+    public bool VerifyTypeExistence = true;
 
     public void GenerateEventCode()
     {
-        string _type = type.Trim();
-        string _upperType = _type.ToUpper()[0] + type.Substring(1);
+        string _type = @class.Trim();
+        string _upperType = _type.ToUpper()[0] + @class.Substring(1);
 
         string result = @"
 using UnityEngine;
@@ -36,14 +40,20 @@ public class " + _upperType + @"EventChannelSO : ScriptableObject
     }
 }
 ";
+        if (!string.IsNullOrEmpty(@namespace))
+        {
+            result = $@"using {@namespace};
+" + result;
+        }
+
         string _path = Path.Combine(path, _upperType + "EventChannelSO.cs");
         File.WriteAllText(_path, result);
     }
 
     public void GenerateListenerCode()
     {
-        string _type = type.Trim();
-        string _upperType = _type.ToUpper()[0] + type.Substring(1);
+        string _type = @class.Trim();
+        string _upperType = _type.ToUpper()[0] + @class.Substring(1);
         
         string result = @"
 using UnityEngine;
@@ -83,6 +93,11 @@ public class " + _upperType + @"EventListener : MonoBehaviour
 	}
 }
 ";
+        if (!string.IsNullOrEmpty(@namespace))
+        {
+            result = $@"using {@namespace};
+" + result;
+        }
 
         string _path = Path.Combine(path, _upperType + "EventListener.cs");
         File.WriteAllText(_path, result);
@@ -94,11 +109,14 @@ public class " + _upperType + @"EventListener : MonoBehaviour
     [NaughtyAttributes.Button("Generate Event Code")]
     public void GenerateAllCode()
     {
-        var typeExists = Type.GetType(type);
-        if(typeExists == null && !systemTypes.Contains(type))
+        if (VerifyTypeExistence)
         {
-            Debug.LogError($"Type {type} does not exist");
-            return;
+            var typeExists = Type.GetType(String.Format("{0}.{1}", @namespace, @class));
+            if (typeExists == null && !systemTypes.Contains(@class))
+            {
+                Debug.LogError($"Type {@class} does not exist");
+                return;
+            }
         }
 
         Task eventCodeTask = Task.Run(GenerateEventCode);

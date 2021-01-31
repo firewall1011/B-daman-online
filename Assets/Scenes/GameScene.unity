@@ -236,13 +236,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.37682313, y: 0.4103272, z: -0.1913387, w: 0.80809987}
   m_LocalPosition: {x: 1.78, y: 7.24, z: -3.08}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 50, y: 53.84, z: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -335,8 +335,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1027326406}
-  - component: {fileID: 1027326405}
   - component: {fileID: 1027326404}
+  - component: {fileID: 1027326405}
   - component: {fileID: 1027326403}
   m_Layer: 0
   m_Name: NetworkManager
@@ -454,7 +454,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &1155675936
 MonoBehaviour:
@@ -465,10 +465,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1155675934}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e99735d74f891742b62f504d22de176, type: 3}
+  m_Script: {fileID: 11500000, guid: 41f84591ce72545258ea98cb7518d8b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnList: {fileID: 11400000, guid: a68dbfdc3caf37346bff216c25a783b2, type: 2}
 --- !u!1 &1626899554
 GameObject:
   m_ObjectHideFlags: 0
@@ -592,7 +591,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1818512059
 MonoBehaviour:
@@ -603,7 +602,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1818512057}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e99735d74f891742b62f504d22de176, type: 3}
+  m_Script: {fileID: 11500000, guid: 41f84591ce72545258ea98cb7518d8b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnList: {fileID: 11400000, guid: a68dbfdc3caf37346bff216c25a783b2, type: 2}

@@ -27,4 +27,9 @@ public class TransformListSO : ScriptableObject
     {
         List.Remove(item);
     }
+
+    public bool Contains(Transform item)
+    {
+        return List.Contains(item);
+    }
 }

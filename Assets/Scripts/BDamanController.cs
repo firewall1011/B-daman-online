@@ -5,62 +5,90 @@ using NaughtyAttributes;
 public class BDamanController : NetworkBehaviour
 {
     [SerializeField] private InputReader inputReader = default;
-    [SerializeField] [Required] private Transform movementTransform = default;
-    [SerializeField] [Required] private Transform rotationTransform = default;
 
-    [ShowNonSerializedField]
-    private float _horizontalMoveDirection = 0f;
-    [SerializeField]
-    private FloatVariable _horizontalMoveSpeed = default;
+    [BoxGroup("Movement")] [SyncVar]
+    private float horizontalMoveDirection = 0f;
+    [BoxGroup("Movement")]
+    [SerializeField] private FloatVariable horizontalMoveSpeed = default;
 
-    [ShowNonSerializedField]
-    private float _rotationDirection = 0f;
-    [SerializeField]
-    private FloatVariable _rotationSpeed = default;
+    [BoxGroup("Rotation")]
+    [SerializeField] private FloatVariable maxRotationDegrees = default;
 
-    [Client]
-    private void Start()
+    private CharacterController _characterController = default;
+    private Vector3 _rightDirection = Vector3.right;
+
+    private void Awake()
     {
-        Debug.Log(hasAuthority + " A/L " + isLocalPlayer);
-        if (hasAuthority)
-        {
-            inputReader.MoveEvent += HorizontalMove;
-            inputReader.LookEvent += Rotate;
-        }
+        _characterController = GetComponent<CharacterController>();
     }
 
-    [Client]
+    public override void OnStartAuthority()
+    {
+        base.OnStartAuthority();
+        inputReader.MoveEvent += CmdHorizontalMove;
+        inputReader.LookEventPerformed += CmdRotate;
+        inputReader.LookEventCanceled += CmdRotateCenter;
+
+        _rightDirection = transform.right;
+        enabled = true;
+    }
+
+    public override void OnStopAuthority()
+    {
+        base.OnStopAuthority();
+        inputReader.MoveEvent -= CmdHorizontalMove;
+        inputReader.LookEventPerformed -= CmdRotate;
+        inputReader.LookEventCanceled -= CmdRotateCenter;
+    }
+
     private void OnDestroy()
     {
         if (hasAuthority)
         {
-            inputReader.MoveEvent -= HorizontalMove;
-            inputReader.LookEvent -= Rotate;
+            inputReader.MoveEvent -= CmdHorizontalMove;
+            inputReader.LookEventPerformed -= CmdRotate;
+            inputReader.LookEventCanceled -= CmdRotateCenter;
         }
     }
 
-    [Client]
-    public void HorizontalMove(float direction)
+    [Command]
+    public void CmdHorizontalMove(float direction)
     {
-        _horizontalMoveDirection = direction;
+        // Clamp direction input
+        direction = Mathf.Clamp(direction, -1f, 1f);
+
+        // Debug View
+        horizontalMoveDirection = direction;
     }
 
-    [Client]
-    public void Rotate(float direction)
+    [Command]
+    public void CmdRotate(float direction)
     {
-        _rotationDirection = direction;
+        // Clamp direction input
+        direction = Mathf.Clamp(direction, -1f, 1f);
+
+        Vector3 rotation = Vector3.up * maxRotationDegrees * direction;
+        transform.localEulerAngles = rotation;
+        
+        RpcRotate(rotation);
     }
 
-    [Client]
+    [Command]
+    public void CmdRotateCenter(float direction)
+    {
+        Vector3 rotation = Vector3.zero;
+        transform.localEulerAngles = rotation;
+
+        RpcRotate(rotation);
+    }
+
+    [ClientRpc]
+    public void RpcRotate(Vector3 localEulerAngles) => transform.localEulerAngles = localEulerAngles;
+
+    //[ServerCallback]
     private void FixedUpdate()
     {
-        float movement = _horizontalMoveDirection * _horizontalMoveSpeed;
-        float rotation = _rotationDirection * _rotationSpeed;
-
-        // Mudar para comando para servidor
-        movementTransform.Translate(transform.right * movement * Time.fixedDeltaTime);
-        rotationTransform.Rotate(Vector3.up, rotation * Time.fixedDeltaTime);
+        float movement = horizontalMoveDirection * horizontalMoveSpeed;
+        _characterController.SimpleMove(_rightDirection * movement * Time.fixedDeltaTime);
     }
-
-
 }

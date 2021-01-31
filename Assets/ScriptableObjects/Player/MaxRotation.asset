@@ -9,6 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 953ad16e6c9ceb244b992797c4f52de4, type: 3}
-  m_Name: PlayerFireEvent
+  m_Script: {fileID: 11500000, guid: c93b8b895fb71974a8b4e5216dbc9c44, type: 3}
+  m_Name: MaxRotation
   m_EditorClassIdentifier: 
+  Value: 20

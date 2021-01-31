@@ -6,16 +6,16 @@ using UnityEngine.Events;
 /// To use a generic UnityEvent type you must override the generic type.
 /// </summary>
 [System.Serializable]
-public class ObjectEvent : UnityEvent<object>{}
+public class IntEvent : UnityEvent<int>{}
 
 /// <summary>
-/// A flexible handler for object events in the form of a MonoBehaviour. Responses can be connected directly from the Unity Inspector.
+/// A flexible handler for int events in the form of a MonoBehaviour. Responses can be connected directly from the Unity Inspector.
 /// </summary>
-public class ObjectEventListener : MonoBehaviour
+public class IntEventListener : MonoBehaviour
 {
-	[SerializeField] private ObjectEventChannelSO _channel = default;
+	[SerializeField] private IntEventChannelSO _channel = default;
 
-	public ObjectEvent OnEventRaised;
+	public IntEvent OnEventRaised;
 
 	private void OnEnable()
 	{
@@ -29,7 +29,7 @@ public class ObjectEventListener : MonoBehaviour
 			_channel.OnEventRaised -= Respond;
 	}
 
-	private void Respond(object value)
+	private void Respond(int value)
 	{
 		if (OnEventRaised != null)
 			OnEventRaised.Invoke(value);

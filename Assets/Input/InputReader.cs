@@ -7,8 +7,10 @@ using BDaman;
 public class InputReader : ScriptableObject, GameInput.IPlayerActions
 {
     public UnityAction<float> MoveEvent = delegate { }; 
-    public UnityAction<float> LookEvent = delegate { }; 
-    public UnityAction        FireEvent = delegate { };
+    public UnityAction<float> LookEventStarted = delegate { }; 
+    public UnityAction<float> LookEventPerformed = delegate { }; 
+    public UnityAction<float> LookEventCanceled = delegate { }; 
+    public UnityAction FireEvent = delegate { };
 
     private GameInput gameInput;
 
@@ -36,7 +38,12 @@ public class InputReader : ScriptableObject, GameInput.IPlayerActions
 
     public void OnLook(InputAction.CallbackContext context)
     {
-        LookEvent.Invoke(context.ReadValue<float>());
+        if (context.started)
+            LookEventStarted.Invoke(context.ReadValue<float>());
+        else if (context.performed)
+            LookEventPerformed.Invoke(context.ReadValue<float>());
+        else if (context.canceled)
+            LookEventCanceled.Invoke(context.ReadValue<float>());
     }
 
     public void OnMove(InputAction.CallbackContext context)
