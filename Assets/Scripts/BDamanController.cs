@@ -14,8 +14,26 @@ public class BDamanController : NetworkBehaviour
     [BoxGroup("Rotation")]
     [SerializeField] private FloatVariable maxRotationDegrees = default;
 
-    private CharacterController _characterController = default;
     private Vector3 _rightDirection = Vector3.right;
+    private float _eulerRotationY = 0f;
+    
+    private CharacterController _characterController = default;
+
+    [Command]
+    public void CmdSetOrientation(Vector3 rightDirection, float eulerRotationY)
+    {
+        _rightDirection = rightDirection;
+        _eulerRotationY = eulerRotationY;
+        
+        RpcSetOrientation(rightDirection, eulerRotationY);
+    }
+
+    [ClientRpc]
+    public void RpcSetOrientation(Vector3 rightDirection, float eulerRotationY)
+    {
+        _rightDirection = rightDirection;
+        _eulerRotationY = eulerRotationY;
+    }
 
     private void Awake()
     {
@@ -29,7 +47,6 @@ public class BDamanController : NetworkBehaviour
         inputReader.LookEventPerformed += CmdRotate;
         inputReader.LookEventCanceled += CmdRotateCenter;
 
-        _rightDirection = transform.right;
         enabled = true;
     }
 
@@ -68,8 +85,9 @@ public class BDamanController : NetworkBehaviour
         direction = Mathf.Clamp(direction, -1f, 1f);
 
         Vector3 rotation = Vector3.up * maxRotationDegrees * direction;
+        rotation.y += _eulerRotationY;
         transform.localEulerAngles = rotation;
-        
+
         RpcRotate(rotation);
     }
 
@@ -77,13 +95,17 @@ public class BDamanController : NetworkBehaviour
     public void CmdRotateCenter(float direction)
     {
         Vector3 rotation = Vector3.zero;
+        rotation.y += _eulerRotationY;
         transform.localEulerAngles = rotation;
 
         RpcRotate(rotation);
     }
 
     [ClientRpc]
-    public void RpcRotate(Vector3 localEulerAngles) => transform.localEulerAngles = localEulerAngles;
+    public void RpcRotate(Vector3 localEulerAngles)
+    {
+        transform.localEulerAngles = localEulerAngles;
+    }
 
     //[ServerCallback]
     private void FixedUpdate()
