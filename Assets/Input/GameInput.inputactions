@@ -142,6 +142,17 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "a35aafd5-fd8a-408a-b28d-f57cf3ef9961",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "QE",
                     "id": "37167eae-dc19-4be3-94a2-999ec1e9d169",
                     "path": "1DAxis",

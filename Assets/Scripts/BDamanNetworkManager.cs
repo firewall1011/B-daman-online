@@ -2,7 +2,7 @@
 using UnityEngine;
 using Mirror;
 
-namespace Assets.Scripts
+namespace BDaman
 {
     public class BDamanNetworkManager : NetworkManager
     {

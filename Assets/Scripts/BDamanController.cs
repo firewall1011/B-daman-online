@@ -2,115 +2,117 @@
 using UnityEngine;
 using NaughtyAttributes;
 
-public class BDamanController : NetworkBehaviour
+namespace BDaman
 {
-    [SerializeField] private InputReader inputReader = default;
-
-    [BoxGroup("Movement")] [SyncVar]
-    private float horizontalMoveDirection = 0f;
-    [BoxGroup("Movement")]
-    [SerializeField] private FloatVariable horizontalMoveSpeed = default;
-
-    [BoxGroup("Rotation")]
-    [SerializeField] private FloatVariable maxRotationDegrees = default;
-
-    private Vector3 _rightDirection = Vector3.right;
-    private float _eulerRotationY = 0f;
-    
-    private CharacterController _characterController = default;
-
-    [Command]
-    public void CmdSetOrientation(Vector3 rightDirection, float eulerRotationY)
+    public class BDamanController : NetworkBehaviour
     {
-        _rightDirection = rightDirection;
-        _eulerRotationY = eulerRotationY;
-        
-        RpcSetOrientation(rightDirection, eulerRotationY);
-    }
+        [SerializeField] private InputReader inputReader = default;
 
-    [ClientRpc]
-    public void RpcSetOrientation(Vector3 rightDirection, float eulerRotationY)
-    {
-        _rightDirection = rightDirection;
-        _eulerRotationY = eulerRotationY;
-    }
+        [BoxGroup("Movement")]
+        [SyncVar]
+        private float horizontalMoveDirection = 0f;
+        [BoxGroup("Movement")]
+        [SerializeField] private FloatVariable horizontalMoveSpeed = default;
 
-    private void Awake()
-    {
-        _characterController = GetComponent<CharacterController>();
-    }
+        [BoxGroup("Rotation")]
+        [SerializeField] private FloatVariable maxRotationDegrees = default;
 
-    public override void OnStartAuthority()
-    {
-        base.OnStartAuthority();
-        inputReader.MoveEvent += CmdHorizontalMove;
-        inputReader.LookEventPerformed += CmdRotate;
-        inputReader.LookEventCanceled += CmdRotateCenter;
+        private Vector3 _rightDirection = Vector3.right;
+        private float _eulerRotationY = 0f;
 
-        enabled = true;
-    }
+        private CharacterController _characterController = default;
 
-    public override void OnStopAuthority()
-    {
-        base.OnStopAuthority();
-        inputReader.MoveEvent -= CmdHorizontalMove;
-        inputReader.LookEventPerformed -= CmdRotate;
-        inputReader.LookEventCanceled -= CmdRotateCenter;
-    }
+        [Command]
+        public void CmdSetOrientation(Vector3 rightDirection, float eulerRotationY)
+        {
+            _rightDirection = rightDirection;
+            _eulerRotationY = eulerRotationY;
 
-    private void OnDestroy()
-    {
-        if (hasAuthority)
+            RpcSetOrientation(rightDirection, eulerRotationY);
+        }
+
+        [ClientRpc]
+        public void RpcSetOrientation(Vector3 rightDirection, float eulerRotationY)
+        {
+            _rightDirection = rightDirection;
+            _eulerRotationY = eulerRotationY;
+        }
+
+        private void Awake()
+        {
+            _characterController = GetComponent<CharacterController>();
+        }
+
+        public override void OnStartAuthority()
+        {
+            inputReader.MoveEvent += CmdHorizontalMove;
+            inputReader.LookEventPerformed += CmdRotate;
+            inputReader.LookEventCanceled += CmdRotateCenter;
+
+            enabled = true;
+        }
+
+        public override void OnStopAuthority()
         {
             inputReader.MoveEvent -= CmdHorizontalMove;
             inputReader.LookEventPerformed -= CmdRotate;
             inputReader.LookEventCanceled -= CmdRotateCenter;
         }
-    }
 
-    [Command]
-    public void CmdHorizontalMove(float direction)
-    {
-        // Clamp direction input
-        direction = Mathf.Clamp(direction, -1f, 1f);
+        private void OnDestroy()
+        {
+            if (hasAuthority)
+            {
+                inputReader.MoveEvent -= CmdHorizontalMove;
+                inputReader.LookEventPerformed -= CmdRotate;
+                inputReader.LookEventCanceled -= CmdRotateCenter;
+            }
+        }
 
-        // Debug View
-        horizontalMoveDirection = direction;
-    }
+        [Command]
+        public void CmdHorizontalMove(float direction)
+        {
+            // Clamp direction input
+            direction = Mathf.Clamp(direction, -1f, 1f);
 
-    [Command]
-    public void CmdRotate(float direction)
-    {
-        // Clamp direction input
-        direction = Mathf.Clamp(direction, -1f, 1f);
+            // Debug View
+            horizontalMoveDirection = direction;
+        }
 
-        Vector3 rotation = Vector3.up * maxRotationDegrees * direction;
-        rotation.y += _eulerRotationY;
-        transform.localEulerAngles = rotation;
+        [Command]
+        public void CmdRotate(float direction)
+        {
+            // Clamp direction input
+            direction = Mathf.Clamp(direction, -1f, 1f);
 
-        RpcRotate(rotation);
-    }
+            Vector3 rotation = Vector3.up * maxRotationDegrees * direction;
+            rotation.y += _eulerRotationY;
+            transform.localEulerAngles = rotation;
 
-    [Command]
-    public void CmdRotateCenter(float direction)
-    {
-        Vector3 rotation = Vector3.zero;
-        rotation.y += _eulerRotationY;
-        transform.localEulerAngles = rotation;
+            RpcRotate(rotation);
+        }
 
-        RpcRotate(rotation);
-    }
+        [Command]
+        public void CmdRotateCenter(float direction)
+        {
+            Vector3 rotation = Vector3.zero;
+            rotation.y += _eulerRotationY;
+            transform.localEulerAngles = rotation;
 
-    [ClientRpc]
-    public void RpcRotate(Vector3 localEulerAngles)
-    {
-        transform.localEulerAngles = localEulerAngles;
-    }
+            RpcRotate(rotation);
+        }
 
-    //[ServerCallback]
-    private void FixedUpdate()
-    {
-        float movement = horizontalMoveDirection * horizontalMoveSpeed;
-        _characterController.SimpleMove(_rightDirection * movement * Time.fixedDeltaTime);
+        [ClientRpc]
+        public void RpcRotate(Vector3 localEulerAngles)
+        {
+            transform.localEulerAngles = localEulerAngles;
+        }
+
+        //[ServerCallback]
+        private void FixedUpdate()
+        {
+            float movement = horizontalMoveDirection * horizontalMoveSpeed;
+            _characterController.SimpleMove(_rightDirection * movement * Time.fixedDeltaTime);
+        }
     }
 }

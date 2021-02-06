@@ -91,8 +91,9 @@ GameObject:
   - component: {fileID: 7278896569800795991}
   - component: {fileID: 8899049072763426179}
   - component: {fileID: 5667685728564267268}
-  - component: {fileID: 508407001003325974}
   - component: {fileID: -590045217532432642}
+  - component: {fileID: 508407001003325974}
+  - component: {fileID: 6303008235474546818}
   - component: {fileID: 4590953822012899947}
   m_Layer: 0
   m_Name: Player
@@ -114,6 +115,7 @@ Transform:
   m_Children:
   - {fileID: 7278896569100335589}
   - {fileID: 873426615517289136}
+  - {fileID: 4214227831061266149}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -151,24 +153,6 @@ MonoBehaviour:
   localPositionSensitivity: 0.01
   localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
---- !u!114 &508407001003325974
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7278896569800795988}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b347e17124a28a640ae8aa013331af54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  inputReader: {fileID: 11400000, guid: e19cf3097edf6b841ab7174de7356a01, type: 2}
-  horizontalMoveSpeed: {fileID: 11400000, guid: 73f5efcf0de91a448821e8d2d6f83379,
-    type: 2}
-  maxRotationDegrees: {fileID: 11400000, guid: cc78ade7fbc09264194c5ad36ad3c408, type: 2}
 --- !u!143 &-590045217532432642
 CharacterController:
   m_ObjectHideFlags: 0
@@ -187,6 +171,42 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &508407001003325974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7278896569800795988}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b347e17124a28a640ae8aa013331af54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  inputReader: {fileID: 11400000, guid: e19cf3097edf6b841ab7174de7356a01, type: 2}
+  horizontalMoveSpeed: {fileID: 11400000, guid: 73f5efcf0de91a448821e8d2d6f83379,
+    type: 2}
+  maxRotationDegrees: {fileID: 11400000, guid: cc78ade7fbc09264194c5ad36ad3c408, type: 2}
+--- !u!114 &6303008235474546818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7278896569800795988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 490cdc96f97121d45add5be16ef2185b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  inputReader: {fileID: 11400000, guid: e19cf3097edf6b841ab7174de7356a01, type: 2}
+  ballPrefab: {fileID: 5442067771452255296, guid: 5b3e21551952b9c4e911e66653c3f868,
+    type: 3}
+  shootingPoint: {fileID: 4214227831061266149}
 --- !u!114 &4590953822012899947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,6 +222,36 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   _virtualCamera: {fileID: 2870927495065707103}
+--- !u!1 &7653001718106781964
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4214227831061266149}
+  m_Layer: 0
+  m_Name: ShootingPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4214227831061266149
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7653001718106781964}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 1.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7278896569800795991}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8892194014243781777
 GameObject:
   m_ObjectHideFlags: 0
