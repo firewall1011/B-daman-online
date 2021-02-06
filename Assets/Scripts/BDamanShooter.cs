@@ -18,6 +18,12 @@ namespace BDaman
             inputReader.FireEvent -= CmdShoot;
         }
 
+        public void OnDestroy()
+        {
+            if(hasAuthority)
+                inputReader.FireEvent -= CmdShoot;
+        }
+
         [Command]
         private void CmdShoot()
         {
